@@ -14,8 +14,8 @@ import logging
 # ================================================ Logging ================================================
 
 
-logger = logging.getLogger('Boat Software')
-hdlr = logging.FileHandler('Boat_Software.log')
+logger = logging.getLogger('boat software')
+hdlr = logging.FileHandler('boatsoftware.log')
 formatter = logging.Formatter('%(asctime)s;%(levelname)s;%(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)
@@ -60,7 +60,7 @@ def Print_Text(Print_Prefix, Print_String):
 # ================================================ Global Veriables ================================================
 
 
-Software_version = "Software version 0.10"
+Software_version = "Software version 0.12"
 Print_Text('Boat software - ' + Software_version, 'Starting')
 logger.info('Boat software - ' + Software_version + ' Starting')
 
