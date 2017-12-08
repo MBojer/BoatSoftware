@@ -1,0 +1,275 @@
+html {
+	background-color: #0C5E6D;
+	color: white;
+	min-width: 700px;
+}
+
+
+
+#body {
+    width: 100%;
+}
+
+
+
+#CLI_Input_Box {
+	width: calc(100% - 62px);
+}
+
+
+
+#Clock {
+	float: right;
+}
+
+
+#Log {
+	background-color: #002830;
+	text-align: center;
+    border: 2px solid black;
+	width: calc(100% - 23px);
+
+}
+
+input[type=submit] {
+	background-color: #002830;
+	color: white;
+}
+
+
+
+h1, h2 {
+	margin: 0;
+}
+
+/* Style the tab */
+div.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the links inside the tab */
+div.tab a {
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of links on hover */
+div.tab a:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+div.tab a:focus, .active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.Tab_Content {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+	
+	background-color: #002830;
+	text-align: center;
+	float: left;
+	padding: 10px;
+	display: inline-block;
+    border: 2px solid black;
+	width: calc(100% - 23px);
+
+}
+
+
+/* ###################################### Relay ###################################### */
+
+.divTableRelay{
+	display: table;
+	width: calc(100% - 13px);
+}
+
+
+.divTableRelayRow {
+	display: table-row;
+	
+}
+
+
+.divTableRelayHead {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+	text-align: center;
+}
+
+.divTableRelayCell {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+	text-align: center;
+	/* width: 100%; */
+}
+
+.divTableRelayHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+
+.divTableRelayFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+
+.divTableRelayBody {
+	display: table-row-group;
+}
+
+
+/* ###################################### Sensor ###################################### */
+
+.divTableSensors{
+	display: table;
+	width: calc(100% - 13px);
+}
+
+
+.divTableSensorsRow {
+	display: table-row;
+}
+ 
+ 
+.divTableSensorsCell, .divTableSensorsHead {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+}
+
+
+.divTableSensorsHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+
+
+.divTableSensorsFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+
+
+.divTableSensorsBody {
+	display: table-row-group;
+}
+
+
+
+
+/* ###################################### CLI ###################################### */
+
+.divTableCLI{
+	display: table;
+	width: calc(100% - 13px); 
+}
+.divTableCLIRow {
+	display: table-row;
+}
+.divTableCLIHeading {
+	background-color: #EEE;
+	display: table-header-group;
+}
+.divTableCLICell, .divTableCLIHead {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+}
+.divTableCLIHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+.divTableCLIFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableCLIBody {
+	display: table-row-group;
+}
+
+
+
+/* ###################################### TEST ###################################### */
+
+
+
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

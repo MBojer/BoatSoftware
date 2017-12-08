@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<!-- For "Boat Software 0.2" -->
+
+<html>
+<head>
+
+<title>Boat Software - Web Interface v0.2</title>
+
+<link rel="stylesheet" type="text/css" href="static/main.css" />
+<link rel="shortcut icon" type="image/x-icon" href="static/favicon.ico"/>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+
+<script type=text/javascript> <!-- Script -->
+
+
+/* ###################################### Main_Function ###################################### */
+
+	function Main_Function(CheckBoxState) {
+
+		console.log("Main_Function: " + CheckBoxState.checked + " --- " + event.target.id);
+		
+		var Main_Function_Name = event.target.id
+
+
+		
+		$.getJSON('/Main_Function', {
+				Main_Function_Send_Value: Main_Function_Name,
+				
+			}, function(data) {
+			
+				if (data.Return_Entry.indexOf('ERROR') !== -1) {
+					if (window.console) console.log('Relay Button - ERROR: ' + data.Return_Entry);
+				}
+				
+				else if (data.Return_Entry.indexOf('Done') !== -1) {
+					if (window.console) console.log('Relay Button - Done');
+				}
+			});
+		
+		
+		<!-- RedWhiteLight -->
+		<!-- GeneratorInverter -->
+		
+	}
+	
+	
+/* ###################################### Relay_Number_Button_Function ###################################### */
+	function Relay_Number_Button_Function(CheckBoxState) {
+
+		var Relay_Number = event.target.id
+		
+			$.getJSON('/Button_Relay', {
+				Relay_Button_Send_Value: Relay_Number,
+				
+			}, function(data) {
+			
+				if (data.Return_Entry.indexOf('ERROR') !== -1) {
+					if (window.console) console.log('Relay Button - ERROR: ' + data.Return_Entry);
+				}
+				
+				else if (data.Return_Entry.indexOf('Done') !== -1) {
+					if (window.console) console.log('Relay Button - Done');
+				}
+			});
+		}
+</script>
+	
+<script type=text/javascript> <!-- background_process_Auto_Refresh -->
+	$(function() {
+		startRefresh();
+	});
+
+	function startRefresh() {
+		<!-- setTimeout(startRefresh,50000); -->
+		<!-- setTimeout(startRefresh,1000); -->
+		setTimeout(startRefresh,1500);
+		
+		$.getJSON('/background_process_Auto_Refresh', {
+		
+		}, function(data) {
+
+
+		if (data.Return_Entry_Auto_Refresh.indexOf('NothingToReport') !== -1) {
+				HAT = 1;
+			}
+					
+			else if (data.Return_Multiple_Hits_Auto_Refresh == true) {
+			
+				var Return_Entry_List = data.Return_Entry_Auto_Refresh;
+				var Return_Value_List = data.Return_Value_Auto_Refresh;
+				var Return_Color_List = data.Return_Color_Auto_Refresh;
+				
+
+				
+
+				while (true) {
+					
+					var Return_Entry = Return_Entry_List.substr(0, Return_Entry_List.indexOf("---"))
+					var Return_Value = Return_Value_List.substr(0, Return_Value_List.indexOf("---"));
+					var Return_Color = Return_Color_List.substr(0, Return_Color_List.indexOf("---"));
+					
+					if (Return_Entry.startsWith("T1N") == true) { <!-- For relys only " -->
+					
+						if (Return_Value == "ON") {
+							document.getElementById(Return_Entry).checked = true;
+						}
+							
+						else {
+							document.getElementById(Return_Entry).checked = false;
+						}
+					
+					}
+					
+					var Return_Entry_List = Return_Entry_List.replace(Return_Entry + "---", "");
+					var Return_Value_List = Return_Value_List.replace(Return_Value + "---", "");
+					var Return_Color_List = Return_Color_List.replace(Return_Color + "---", "");
+
+					if (Return_Entry_List === '') {
+						break;
+					}
+				}
+				
+			}
+	
+			else if (data.Return_Entry_Auto_Refresh.indexOf('ERROR') !== -1) {
+				alert('Recieved ERROR: ' + data.Return_Entry_Auto_Refresh);
+			}
+			
+			$("#" + data.Return_Entry_Auto_Refresh).text(data.Return_Value_Auto_Refresh);
+			$("#" + data.Return_Entry_Auto_Refresh).css("background-color", data.Return_Color_Auto_Refresh);
+		});
+	};
+</script>
+	
+<script type=text/javascript> <!-- Button_Voltmeter -->
+	$(function() {
+		 $(".Voltmeter_Button").click(function(){
+		 
+			var Voltmeter_Number = $(this).attr('value')
+						
+			$("#" + Voltmeter_Number + "V2").text("Unknown");
+			$("#" + Voltmeter_Number + "V2").css({"background-color": "#B4ACBA"});
+			
+			$("#" + Voltmeter_Number + "V2TD").text("Unknown");
+			$("#" + Voltmeter_Number + "V2TD").css({"background-color": "#B4ACBA"});
+			
+			$.getJSON('/Button_Voltmeter', {
+				Voltmeter_Button_Send_Value: $(this).attr("value"),
+				
+			}, function(data) {
+			
+				if (data.Return_Entry.indexOf('ERROR') !== -1) {
+					if (window.console) console.log('Voltmeter Button - Done');
+					alert('Recieved ERROR: ' + data.Return_Entry);
+				}
+				
+				else if (data.Return_Entry.indexOf('Done') !== -1) {
+					if (window.console) console.log('Voltmeter Button - Done');
+				}
+			});
+		
+		return false;
+		});
+	});
+</script>
+	
+<script type=text/javascript> <!-- Button Multiple Actions -->
+	$(function() {
+		 $(".Multiple_Actions_Button").click(function(){
+		 
+			$.getJSON('/Button_Multiple_Actions', {
+				Relay_Button_Send_Value: $(this).attr("id"),
+				
+			}, function(data) {
+			
+				console.log('Button Multiple Actions - Done')
+			
+			});
+				
+		return false;
+		});
+	});
+</script>
+
+<script type=text/javascript> <!-- Refresh_Function -->
+function Refresh_Function() {
+		
+	$.getJSON('/Refresh_Function', {
+	
+	}, function(data) {
+					
+		var Refresh_Function_Entry_List = data.Refresh_Function_Entry;
+		var Refresh_Function_Value_List = data.Refresh_Function_Value;
+		var Refresh_Function_Color_List = data.Refresh_Function_Color;
+
+		while (true) {
+			
+			var Return_Entry = Refresh_Function_Entry_List.substr(0, Refresh_Function_Entry_List.indexOf("---"));
+			var Return_Value = Refresh_Function_Value_List.substr(0, Refresh_Function_Value_List.indexOf("---"));
+			var Return_Color = Refresh_Function_Color_List.substr(0, Refresh_Function_Color_List.indexOf("---"));
+			
+			if (Return_Entry.startsWith("T1N") == true) { <!-- For relys only " -->
+					
+				if (Return_Value == "ON") {
+					document.getElementById(Return_Entry).checked = true;
+				}
+					
+				else {
+					document.getElementById(Return_Entry).checked = false;
+				}
+			}
+			
+			$("#" + Return_Entry).text(Return_Value);
+			$("#" + Return_Entry).css("background-color", Return_Color);
+			
+			var Refresh_Function_Entry_List = Refresh_Function_Entry_List.replace(Return_Entry + "---", "");
+			var Refresh_Function_Value_List = Refresh_Function_Value_List.replace(Return_Value + "---", "");
+			var Refresh_Function_Color_List = Refresh_Function_Color_List.replace(Return_Color + "---", "");
+
+			if (Refresh_Function_Entry_List === '') {
+				break;
+			};
+		};
+			
+		});
+	};
+</script>
+
+
+</head>
+
+<div class="tab"> <!-- Tab's -->
+	<a href="javascript:void(0)" class="tablinks" id="defaultOpen" onclick="OpenTab(event, 'Main')" >Main</a>
+	<a href="javascript:void(0)" class="tablinks" onclick="OpenTab(event, 'Relays')" >Relay's</a>
+	<a href="javascript:void(0)" class="tablinks" onclick="OpenTab(event, 'Sensors')" >Sensor's</a>
+	<a href="javascript:void(0)" class="tablinks" onclick="OpenTab(event, 'CLI')" >CLI</a>
+	<a href="javascript:void(0)" class="tablinks" onclick="OpenTab(event, 'Log')" >Log</a>
+	<a href="javascript:void(0)" class="tablinks" onclick="Refresh_Function()" >Refresh</a>
+	
+	<a id="Clock"></a>
+	
+</div>  <!-- End marker for "Tab" -->
+
+
+<body onload="startTime()" ></body><!-- Starts the clock -->
+
+
+<div id="Main" class="Tab_Content">
+<div class="divTableRelay">
+<div class="divTableRelayBody">
+<div class="divTableRelayRow">
+<div class="divTableRelayHead">Action</div>
+<div class="divTableRelayHead">State</div>
+<div class="divTableRelayHead">Button</div>
+<div class="divTableRelayHead">Comment</div>
+</div>
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">Red/White Light</div>
+<div class="divTableRelayCell" id="T1N##">Unknown</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Main_Function(this)" id="RedWhiteLight"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Switch between the red and white light</div>
+</div>
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">Generator \ Inverter</div>
+<div class="divTableRelayCell" id="T1N##">Unknown</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Main_Function(this)" id="GeneratorInverter"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Switch between generator and invertor</div>
+</div>
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">---</div>
+<div class="divTableRelayCell">---</div>
+<div class="divTableRelayCell">---</div>
+<div class="divTableRelayCell">---</div>
+</div>
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">All-OFF</div>
+<div class="divTableRelayCell">---</div>
+<div class="divTableRelayCell"><form action="Main" method="post"><input name="All-OFF" type="submit" value="Switch" /></form></div>
+<div class="divTableRelayCell">Kill ALL humans!</div>
+</div>
+</div> <!-- End marker for divTableRelay body -->
+</div> <!-- End marker for divTableRelay table -->
+</div> <!-- End marker for Main page -->
+
+
+
+
+<!-- # #################### I2C Code List #################### -->
+
+<!-- # -------------------- T1 - Relay -------------------- -->
+
+<!-- # V1 = ON -->
+<!-- # V2 = OFF -->
+<!-- # V3 = Flip State -->
+
+<!-- # V4 = State Request -->
+<!-- # V40 = State ON -->
+<!-- # V41 = State is OFF -->
+
+<!-- # V99 = ERROR -->
+
+<!-- # Example = T1N1V1 -->
+
+
+<!-- # -------------------- T51 - Voltmeter -------------------- -->
+
+<!-- # V1 = Request value -->
+<!-- # V2 = Value: ##.## -->
+<!-- # V99 = ERROR -->
+
+
+<!-- # -------------------- T52 - Ultrasonic Distance -------------------- -->
+
+<!-- # V1 = Request value -->
+<!-- # V2 = Value: ##.## -->
+<!-- # V99 = ERROR -->
+
+
+<div id="Relays" class="Tab_Content">
+<div class="divTableRelay">
+<div class="divTableRelayBody">
+<div class="divTableRelayRow">
+<div class="divTableRelayHead">Relay #</div>
+<div class="divTableRelayHead">State</div>
+<div class="divTableRelayHead">Comment</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">1</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N1"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Old Light's</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">2</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N2"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Main Light's</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">3</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N3"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Red Light's</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">4</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N4"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">USB Charger - 12v</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">5</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N5"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Blower</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">6</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N6"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Bilge pump</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">7</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N7"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Generator \ Inverter</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">8</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N8"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Inverter</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">9</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N9"> <span class="slider round"> </label> </div>
+
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">10</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N10"> <span class="slider round"> </label> </div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">11</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N11"> <span class="slider round"> </label> </div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">12</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N12"> <span class="slider round"> </label> </div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">13</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N13"> <span class="slider round"> </label> </div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">14</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N14"> <span class="slider round"> </label> </div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">15</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N15"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Back Light's</div>
+</div>
+
+<div class="divTableRelayRow">
+<div class="divTableRelayCell">16</div>
+<div class="divTableRelayCell"> <label class="switch"> <input type="checkbox" onchange="Relay_Number_Button_Function(this)" id="T1N16"> <span class="slider round"> </label> </div>
+<div class="divTableRelayCell">Router</div>	
+</div>
+
+</div>
+</div>
+</div> <!-- End marker for divTableRelay body -->
+
+<div id="Sensors" class="Tab_Content">
+<div class="divTableSensors">
+<div class="divTableSensorsBody">
+<div class="divTableSensorsRow">
+<div class="divTableSensorsHead">Sensor</div>
+<div class="divTableSensorsHead">Comment</div>
+<div class="divTableSensorsHead">Request</div>
+<div class="divTableSensorsHead">Value</div>
+<div class="divTableSensorsHead">Last updated</div>
+</div>
+<div class="divTableSensorsRow">
+<div class="divTableSensorsCell">Voltmeter 1</div>
+<div class="divTableSensorsCell">Main voltmeter</div>
+<div class="divTableSensorsCell"><button class="Voltmeter_Button" value="T51N1V1">Voltmeter 1</button></div>
+<div class="divTableSensorsCell" id="T51N1V2">Unknown</div>
+<div class="divTableSensorsCell" id="T51N1V2TD">Unknown</div>
+</div>
+</div>
+</div>
+</div> <!-- End marker for Sensors page -->
+
+
+
+<div id="CLI" class="Tab_Content">
+	<div class="divTableCLI">
+		<div class="divTableCLIBody">
+		<div class="divTableCLIRow">
+		<div class="divTableCLICell"><!-- Insert CLI_Log file here --></div>
+		</div>
+		<div class="divTableCLIRow">
+		
+		<div class="divTableCLICell">
+			<form action="CLI_Enter" method="POST">
+				<input id="CLI_Input_Box" type="text" name="CLI_Input">
+				<input type="submit" value="Enter">
+			</form>
+		</div>
+		
+		</div>
+	</div>
+</div>
+</div>  <!-- End marker for "CLI" -->
+
+
+
+<div id="Log" class="Tab_Content">
+	<p>LOG FILE HERE</p>
+	<p>LOG FILE HERE</p>
+	<p>LOG FILE HERE</p>
+	<p>LOG FILE HERE</p>
+</div>  <!-- End marker for "Log" -->
+
+
+
+</body>
+
+<script>
+  window.addEventListener("load", function(event) {
+	Refresh_Function();
+  });
+</script>
+
+
+<script>
+function OpenTab(evt, TabName) {
+    // Declare all variables
+    var i, Tab_Content, tablinks;
+
+    // Get all elements with class="Tab_Content" and hide them
+    Tab_Content = document.getElementsByClassName("Tab_Content");
+    for (i = 0; i < Tab_Content.length; i++) {
+        Tab_Content[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the link that opened the tab
+    document.getElementById(TabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+document.getElementById("defaultOpen").click(); //Opens the Button's tab when the page is loaded
+
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('Clock').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+
+n =  new Date();
+y = n.getFullYear();
+m = n.getMonth() + 1;
+d = n.getDate();
+
+h = n.getHours();
+min = n.getMinutes()
+
+<!-- document.getElementById("date").innerHTML = d + "-" + m + "-" + y + " - " + h + ":" + min; -->
+</script>
+
+
+
+</html>
